@@ -300,11 +300,11 @@ def main():
         data.output_vocabulary_schema,
         data.anonymizer if params.anonymize and params.anonymization_scoring else None)
 
-    model = model.cuda()
+    model = model.cpu()
     print('=====================Model Parameters=====================')
     for name, param in model.named_parameters():
-        print(name, param.requires_grad, param.is_cuda, param.size())
-        assert param.is_cuda
+        print(name, param.requires_grad, param.size())
+        # assert param.is_cuda
 
     model.build_optim()
 

@@ -85,7 +85,10 @@ def get_schema(db):
     """
 
     schema = {}
-    conn = sqlite3.connect(db)
+    try:
+        conn = sqlite3.connect(db)
+    except:
+        raise Exception('sth wrong' + db)
     cursor = conn.cursor()
 
     # fetch table names

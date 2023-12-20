@@ -409,7 +409,7 @@ def write_and_evaluate(postprocess_sqls, db_path, table_schema_path, gold_path, 
       db = line.strip().split('\t')[1]
       if db not in db_list:
         db_list.append(db)
-
+        
   output_file = 'output_temp.txt'
   if dataset == 'spider':
     with open(output_file, "w") as f:
@@ -431,11 +431,11 @@ def write_and_evaluate(postprocess_sqls, db_path, table_schema_path, gold_path, 
           f.write('{}\n'.format(postprocess_sql))
           cnt += 1
 
-    command = 'python2 eval_scripts/evaluation_sqa.py --db {} --table {} --etype match --gold {} --pred {}'.format(db_path,
+    command = 'python3 eval_scripts/evaluation_sqa.py --db {} --table {} --etype match --gold {} --pred {}'.format(db_path,
                                                                                                       table_schema_path,
                                                                                                       gold_path,
                                                                                                       os.path.abspath(output_file))
-  command += '; rm output_temp.txt'
+  # command += '; rm output_temp.txt'
   return command
 
 if __name__ == '__main__':
@@ -458,7 +458,7 @@ if __name__ == '__main__':
   elif args.dataset == 'cosql':
     table_schema_path = 'data/cosql/tables.json'
     if args.split == 'dev':
-      gold_path = 'data/cosql/dev_gold.txt'
+      gold_path = 'data/data_pi/task1/dev_gold.txt'
 
   pred_file = args.pred_file
 

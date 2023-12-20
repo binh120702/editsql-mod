@@ -1,0 +1,19 @@
+Original number of training utterances:	7330
+Actual number of used training examples:	2157
+(Shortened by output limit of 200)
+Number of steps per epoch:	2157
+Batch size:	1
+Epoch:	0
+train epoch loss:	0.25522759825675145
+train final gold-passing LOSS:	72.23
+train final gold-passing TOKEN_ACCURACY:	79.03
+train final gold-passing STRING_ACCURACY:	7.98
+valid gold-passing LOSS:	76.36
+valid gold-passing TOKEN_ACCURACY:	78.17
+valid gold-passing STRING_ACCURACY:	9.44
+maximum string accuracy:	9.44372574385511
+patience:	10.1
+save file:	logs/logs_cosql_cdseq2seq/save_0
+countdown:	9
+
+Epoch:	1

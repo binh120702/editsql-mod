@@ -9,6 +9,7 @@ from postprocess_eval import get_candidate_tables
 
 
 def write_interaction(interaction_list,split,output_dir):
+  print("writing to ", output_dir)
   json_split = os.path.join(output_dir,split+'.json')
   pkl_split = os.path.join(output_dir,split+'.pkl')
 
@@ -446,17 +447,28 @@ def read_sparc(sparc_dir, database_schemas, column_names, output_vocab, schema_t
   return interaction_list
 
 
+def read_cosql_pi(cosql_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from):
+  
+  interaction_list_train = {}
+  train_json = os.path.join(cosql_dir, 'train.json')
+  interaction_list_train = read_data_json(train_json, interaction_list_train, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
+
+  interaction_list_dev = {}
+  dev_json = os.path.join(cosql_dir, 'dev.json')
+  interaction_list_dev = read_data_json(dev_json, interaction_list_dev, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
+
+  return interaction_list_train, interaction_list_dev
+
 def read_cosql(cosql_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from):
   interaction_list = {}
 
   train_json = os.path.join(cosql_dir, 'train.json')
-  interaction_list = read_data_json(train_json, interaction_list, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
+  interaction_list= read_data_json(train_json, interaction_list, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
 
   dev_json = os.path.join(cosql_dir, 'dev.json')
   interaction_list = read_data_json(dev_json, interaction_list, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
 
   return interaction_list
-
 
 def read_db_split(data_dir):
   train_database = []
@@ -472,7 +484,7 @@ def read_db_split(data_dir):
   return train_database, dev_database
 
 
-def preprocess(dataset, remove_from=False):
+def preprocess(dataset, remove_from=False, pi_working=False):
   # Validate output_vocab
   output_vocab = ['_UNK', '_EOS', '.', 't1', 't2', '=', 'select', 'from', 'as', 'value', 'join', 'on', ')', '(', 'where', 't3', 'by', ',', 'count', 'group', 'order', 'distinct', 't4', 'and', 'limit', 'desc', '>', 'avg', 'having', 'max', 'in', '<', 'sum', 't5', 'intersect', 'not', 'min', 'except', 'or', 'asc', 'like', '!', 'union', 'between', 't6', '-', 't7', '+', '/']
   if remove_from:
@@ -496,7 +508,10 @@ def preprocess(dataset, remove_from=False):
       output_dir = 'data/sparc_data_removefrom'
     train_database, dev_database = read_db_split(sparc_dir)
   elif dataset == 'cosql':
-    cosql_dir = 'data/cosql/'
+    if pi_working:
+      cosql_dir = 'data/data_pi/task1'
+    else:
+      cosql_dir = 'data/cosql/'
     database_schema_filename = 'data/cosql/tables.json'
     output_dir = 'data/cosql_data'
     if remove_from:
@@ -526,18 +541,31 @@ def preprocess(dataset, remove_from=False):
   elif dataset == 'sparc':
     interaction_list = read_sparc(sparc_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
   elif dataset == 'cosql':
-    interaction_list = read_cosql(cosql_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
+    if pi_working:
+      interaction_list_train, interaction_list_dev = read_cosql_pi(cosql_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
+    else:
+      interaction_list = read_cosql(cosql_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from)
+  
 
-  print('interaction_list length', len(interaction_list))
+  if pi_working:
+    print('pi working: train: ', len(interaction_list_train), 'dev:', len(interaction_list_dev))
+    train_interaction = []
+    dev_interaction = []
+    for database_id in interaction_list_train:
+      train_interaction += interaction_list_train[database_id]
+    for database_id in interaction_list_dev:
+      dev_interaction += interaction_list_dev[database_id]
+  else:
+    print('interaction_list length', len(interaction_list))
 
-  train_interaction = []
-  for database_id in interaction_list:
-    if database_id not in dev_database:
-      train_interaction += interaction_list[database_id]
+    train_interaction = []
+    for database_id in interaction_list:
+      if database_id not in dev_database:
+        train_interaction += interaction_list[database_id]
 
-  dev_interaction = []
-  for database_id in dev_database:
-    dev_interaction += interaction_list[database_id]
+    dev_interaction = []
+    for database_id in dev_database:
+      dev_interaction += interaction_list[database_id]
 
   print('train interaction: ', len(train_interaction))
   print('dev interaction: ', len(dev_interaction))
@@ -552,5 +580,6 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument("--dataset", choices=('spider', 'sparc', 'cosql'), default='sparc')
   parser.add_argument('--remove_from', action='store_true', default=False)
+  parser.add_argument('--pi_working', action='store_true')
   args = parser.parse_args()
-  preprocess(args.dataset, args.remove_from)
+  preprocess(args.dataset, args.remove_from, args.pi_working)
