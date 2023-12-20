@@ -189,7 +189,7 @@ def train_epoch_with_interactions(interaction_batches,
         if interaction.identifier == "raw/atis2/12-1.1/ATIS2/TEXT/TEST/NOV92/770/5":
             continue
 
-        if 'sparc' in params.data_directory and "baseball_1" in interaction.identifier:
+        if "baseball_1" in interaction.identifier:
             continue
 
         batch_loss = model.train_step(interaction, params.train_maximum_sql_length)
