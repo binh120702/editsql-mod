@@ -41,4 +41,4 @@ CUDA_VISIBLE_DEVICES=0 python3 run.py --raw_train_filename="data/cosql_data_remo
 
 # 3. get evaluation result
 
-python3 postprocess_eval.py --dataset=cosql --split=dev --pred_file $LOGDIR/valid_use_predicted_queries_predictions.json --remove_from
+python3 postprocess_eval.py --dataset=cosql --split=dev --pred_file $LOGDIR/valid_use_predicted_queries_predictions.json --remove_from --not_eval

@@ -1,3 +1,2 @@
 select course_id , title from course
-select T1.title , T2.prereq_id from course as T1 join prereq as T2 on T1.course_id = T2.prereq_id where T1.course_id = T2.course_id
-select course_id != from course select course_id from prereq
+select title from course

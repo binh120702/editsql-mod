@@ -444,6 +444,7 @@ if __name__ == '__main__':
   parser.add_argument('--split', type=str, default='dev')
   parser.add_argument('--pred_file', type=str, default='')
   parser.add_argument('--remove_from', action='store_true', default=False)
+  parser.add_argument('--not_eval', action='store_true')
   args = parser.parse_args()
 
   db_path = 'data/database/'
@@ -468,7 +469,9 @@ if __name__ == '__main__':
 
   command = write_and_evaluate(postprocess_sqls, db_path, table_schema_path, gold_path, args.dataset)
 
-  eval_output = subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
-  with open(pred_file+'.eval', 'w') as f:
-    f.write(eval_output.decode("utf-8"))
-  print('Eval result in', pred_file+'.eval')
+  if not args.not_eval:
+    print("EVALUATING")
+    eval_output = subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
+    with open(pred_file+'.eval', 'w') as f:
+      f.write(eval_output.decode("utf-8"))
+    print('Eval result in', pred_file+'.eval')
