@@ -10,6 +10,7 @@ from . import dataset_split as ds
 from .interaction import load_function
 from .entities import NLtoSQLDict
 from .atis_vocab import ATISVocabulary
+from copy import deepcopy
 
 ENTITIES_FILENAME = 'data/entities.txt'
 ANONYMIZATION_FILENAME = 'data/anonymization.txt'
@@ -43,17 +44,24 @@ class ATISDataset():
             return [s for i in the_list for s in i]
 
         if 'atis' not in params.data_directory:
-            self.train_data = ds.DatasetSplit(
-                os.path.join(params.data_directory, params.processed_train_filename),
-                params.raw_train_filename,
-                int_load_function)
+
             self.valid_data = ds.DatasetSplit(
                 os.path.join(params.data_directory, params.processed_validation_filename),
                 params.raw_validation_filename,
-                int_load_function)
-
-            train_input_seqs = collapse_list(self.train_data.get_ex_properties(lambda i: i.input_seqs()))
+                int_load_function)            
+            if params.infer_only_dev:
+                self.train_data = deepcopy(self.valid_data)
+            else:
+                self.train_data = ds.DatasetSplit(
+                    os.path.join(params.data_directory, params.processed_train_filename),
+                    params.raw_train_filename,
+                    int_load_function)
+     
             valid_input_seqs = collapse_list(self.valid_data.get_ex_properties(lambda i: i.input_seqs()))
+            if params.infer_only_dev:
+                train_input_seqs = deepcopy(valid_input_seqs)
+            else:
+                train_input_seqs = collapse_list(self.train_data.get_ex_properties(lambda i: i.input_seqs()))
 
             all_input_seqs = train_input_seqs + valid_input_seqs
 
@@ -71,8 +79,12 @@ class ATISDataset():
                 is_input='schema',
                 anonymizer=self.anonymizer if params.anonymization_scoring else None)
 
-            train_output_seqs = collapse_list(self.train_data.get_ex_properties(lambda i: i.output_seqs()))
             valid_output_seqs = collapse_list(self.valid_data.get_ex_properties(lambda i: i.output_seqs()))
+            if params.infer_only_dev:
+                train_output_seqs = deepcopy(valid_output_seqs)
+            else:
+                train_output_seqs = collapse_list(self.train_data.get_ex_properties(lambda i: i.output_seqs()))
+                
             all_output_seqs = train_output_seqs + valid_output_seqs
 
             sql_keywords = ['.', 't1', 't2', '=', 'select', 'as', 'join', 'on', ')', '(', 'where', 't3', 'by', ',', 'group', 'distinct', 't4', 'and', 'limit', 'desc', '>', 'avg', 'having', 'max', 'in', '<', 'sum', 't5', 'intersect', 'not', 'min', 'except', 'or', 'asc', 'like', '!', 'union', 'between', 't6', '-', 't7', '+', '/']
