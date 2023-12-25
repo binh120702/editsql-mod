@@ -1,5 +1,6 @@
 *pyc
 model/*
 data/*
+!data/data_pi
 logs_spider_editsql/*
 processed_data_spider_removefrom/*

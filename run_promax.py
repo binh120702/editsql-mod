@@ -314,7 +314,7 @@ def main(params):
     if params.evaluate and 'valid' in params.evaluate_split:
         evaluate(model, data, params, last_save_file, split='valid')
 
-def get_model(params, save_file):
+def get_model(params):
     """Main function that trains and/or evaluates a model."""
 
     # Prepare the dataset into the proper form.
@@ -340,7 +340,7 @@ def get_model(params, save_file):
     model.build_optim()
 
 
-    model.load(save_file)
+    model.load(params.save_file)
 
     return model
 
