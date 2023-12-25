@@ -17,7 +17,7 @@ class NLtoSQLDict:
         self.entity_dict = {}
 
         pairs = [json.loads(line)
-                 for line in open(entity_dict_filename).readlines()]
+                     for line in open(entity_dict_filename).readlines()]
         for pair in pairs:
             input_seq = pair["input"]
             output_seq = pair["output"]

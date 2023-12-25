@@ -393,8 +393,6 @@ def evaluate_interaction_sample(sample,
     progbar.start()
 
     num_utterances = 0
-    ignore_with_gpu = [line.strip() for line in open(
-        "data/cpu_full_interactions.txt").readlines()]
     predictions = []
 
     use_gpu = not ("--no_gpus" in sys.argv or "--no_gpus=1" in sys.argv)

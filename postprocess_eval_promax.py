@@ -400,9 +400,9 @@ def read_schema(table_schema_path):
   return database_schema_dict
     
 
-def get_inference(database_schema):
+def get_inference(params, database_schema):
   
-  pred_file = 'logs/logs_cosql_editsql/valid_use_predicted_queries_predictions.json'
+  pred_file = os.path.join(params.model_folder_path, 'logs/logs_cosql_editsql/valid_use_predicted_queries_predictions.json')
 
   predictions = read_prediction(pred_file)
   postprocess_sqls = postprocess(predictions, database_schema, remove_from=True)

@@ -296,6 +296,7 @@ def interpret_parser():
     parser.add_argument('--database_username', type=str, default="aviarmy")
     parser.add_argument('--database_password', type=str, default="aviarmy")
     parser.add_argument('--database_timeout', type=int, default=2)
+
     parser.add_argument('--infer_only_dev', type=bool, default=False)
-           
+    parser.add_argument('--model_folder_path', type=str, default='')       
     return parser   

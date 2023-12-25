@@ -14,7 +14,7 @@ from .bert.modeling import BertConfig, BertModel
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_bert(params):
-    BERT_PT_PATH = './model/bert/data/annotated_wikisql_and_PyTorch_bert_param'
+    BERT_PT_PATH = os.path.join(params.model_folder_path, './model/bert/data/annotated_wikisql_and_PyTorch_bert_param')
     map_bert_type_abb = {'uS': 'uncased_L-12_H-768_A-12',
                          'uL': 'uncased_L-24_H-1024_A-16',
                          'cS': 'cased_L-12_H-768_A-12',

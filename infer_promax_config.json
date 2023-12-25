@@ -1,8 +1,9 @@
 {
-    "glvoe_path" : "/home/dapici/glove.840B.300d.txt", 
+    "glove_path" : "/home/dapici/glove.840B.300d.txt", 
     "logdir" : "logs/logs_cosql_editsql",
     "save_file" : "logs/logs_cosql_editsql/save_12_cosql_editsql",
     "args" : [
+        "--model_folder_path", "/home/dapici/editsql/",
         "--raw_train_filename", "data/cosql_data_removefrom/train.pkl",
         "--raw_validation_filename", "data/cosql_data_removefrom/dev.pkl",
         "--database_schema_filename", "data/cosql_data_removefrom/tables.json",

@@ -20,12 +20,12 @@ class ATISDataset():
     def __init__(self, params):
         self.anonymizer = None
         if params.anonymize:
-            self.anonymizer = anon.Anonymizer(ANONYMIZATION_FILENAME)
+            self.anonymizer = anon.Anonymizer(os.path.join(params.model_folder_path, ANONYMIZATION_FILENAME))
 
         if not os.path.exists(params.data_directory):
             os.mkdir(params.data_directory)
 
-        self.entities_dictionary = NLtoSQLDict(ENTITIES_FILENAME)
+        self.entities_dictionary = NLtoSQLDict(os.path.join(params.model_folder_path, ENTITIES_FILENAME))
 
         database_schema = None
         if params.database_schema_filename:

@@ -570,10 +570,10 @@ def read_db_split_dev_only(data_dir):
 
   return dev_database
 
-def ready_for_preprocessing():
+def ready_for_preprocessing(params):
 
-  database_schema_filename = 'data/cosql/tables.json'
-  output_dir = 'data/cosql_data_removefrom'
+  database_schema_filename = os.path.join(params.model_folder_path, 'data/cosql/tables.json')
+  output_dir = os.path.join(params.model_folder_path, 'data/cosql_data_removefrom')
 
   if os.path.isdir(output_dir):
     shutil.rmtree(output_dir)
@@ -591,7 +591,7 @@ def ready_for_preprocessing():
 
   # create a train.pkl 
   output_vocab = ['_UNK', '_EOS', '=', 'select', 'value', ')', '(', 'where', ',', 'count', 'group_by', 'order_by', 'distinct', 'and', 'limit_value', 'limit', 'desc', '>', 'avg', 'having', 'max', 'in', '<', 'sum', 'intersect', 'not', 'min', 'except', 'or', 'asc', 'like', '!=', 'union', 'between', '-', '+', '/']
-  cosql_dir = 'data/data_pi/task1'
+  cosql_dir = os.path.join(params.model_folder_path,'data/data_pi/task1')
   interaction_list_train, interaction_list_dev = read_cosql_pi(cosql_dir, database_schemas, column_names, output_vocab, schema_tokens, remove_from=True)
 
   print('pi working: train: ', len(interaction_list_train), 'dev:', len(interaction_list_dev))
@@ -610,9 +610,9 @@ def ready_for_preprocessing():
 
   return schema_tokens, column_names, database_schemas
 
-def preprocess(cosql_data, schema_tokens, column_names, database_schemas):
+def preprocess(params, cosql_data, schema_tokens, column_names, database_schemas):
 
-  output_dir = 'data/cosql_data_removefrom'
+  output_dir = os.path.join(params.model_folder_path, 'data/cosql_data_removefrom')
   
   output_vocab = ['_UNK', '_EOS', '=', 'select', 'value', ')', '(', 'where', ',', 'count', 'group_by', 'order_by', 'distinct', 'and', 'limit_value', 'limit', 'desc', '>', 'avg', 'having', 'max', 'in', '<', 'sum', 'intersect', 'not', 'min', 'except', 'or', 'asc', 'like', '!=', 'union', 'between', '-', '+', '/']
   
